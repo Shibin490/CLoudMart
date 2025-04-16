@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "276265917806",
+    "project_id": "cloud-mart-b5dac",
+    "storage_bucket": "cloud-mart-b5dac.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276265917806:android:a92b067fabc003c260f57f",
+        "android_client_info": {
+          "package_name": "com.cloudmart.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBnRZSFJA0i8leeMNKGBzW8dcV9Uhu18I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
