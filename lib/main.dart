@@ -1,36 +1,40 @@
-import 'package:cloud_mart/auth_wraper.dart';
-import 'package:cloud_mart/login_screen.dart';
-import 'package:cloud_mart/signup.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_mart/providers/login_provider.dart';
+import 'package:cloud_mart/providers/signup_provider.dart';
+import 'package:cloud_mart/routes/routes.dart';
+import 'package:cloud_mart/views/auth_wraper.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'auth_service.dart';
+import 'package:sizer/sizer.dart'; 
+import 'services/auth_service.dart';
+import 'themes/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(); 
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthService()),
-      ],
-      child: MaterialApp(
-        title: 'Cloud Mart',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: AuthWrapper(),
-        routes: {
-          '/signin': (context) => SignInScreen(),
-          '/signup': (context) => SignUpScreen(),
-        },
-      ),
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => AuthService()),
+            ChangeNotifierProvider(create: (_) => SignUpProvider()),
+            ChangeNotifierProvider(create: (_) => LoginProvider()),
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Cloud Mart',
+            theme: AppTheme.lightTheme,
+            home: AuthWrapper(),
+            routes: AppRoutes.routes,
+          ),
+        );
+      },
     );
   }
 }

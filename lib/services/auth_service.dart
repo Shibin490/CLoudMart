@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 
 class AuthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // Current user
   User? get currentUser => _auth.currentUser;
@@ -40,6 +42,37 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  // Sign in with Google
+  Future<User?> signInWithGoogle() async {
+    try {
+      // Trigger the Google Sign-In flow
+      GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        print("❌ Google sign-in aborted.");
+        return null; // User canceled the sign-in
+      }
+
+      // Obtain the GoogleAuth details
+      GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Create a new credential using the GoogleAuth details
+      OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in with the Google credentials
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      print("✅ User signed in with Google: ${userCredential.user?.uid}");
+      notifyListeners();
+      return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      print("❌ Google sign-in failed: ${e.code} - ${e.message}");
+      throw _handleAuthException(e);
+    }
+  }
+
   // Handle FirebaseAuthException and return a readable message
   String _handleAuthException(FirebaseAuthException e) {
     switch (e.code) {
@@ -61,6 +94,7 @@ class AuthService extends ChangeNotifier {
   // Sign out the user
   Future<void> signOut() async {
     await _auth.signOut();
+    await _googleSignIn.signOut();
     print("🚪 User signed out");
     notifyListeners();
   }
