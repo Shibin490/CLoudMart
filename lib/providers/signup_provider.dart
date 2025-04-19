@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUpProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -51,6 +52,49 @@ class SignUpProvider extends ChangeNotifier {
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       _showSnackBar(context, _getErrorMessage(e));
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        _isLoading = false;
+        notifyListeners();
+        return; 
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final user = userCredential.user;
+
+      if (user != null) {
+        final doc = await _firestore.collection('users').doc(user.uid).get();
+        if (!doc.exists) {
+          await _firestore.collection('users').doc(user.uid).set({
+            'name': user.displayName ?? '',
+            'email': user.email ?? '',
+            'phone': '',
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+        }
+
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } catch (e) {
+      _showSnackBar(context, 'Google sign-in failed: ${e.toString()}');
     } finally {
       _isLoading = false;
       notifyListeners();

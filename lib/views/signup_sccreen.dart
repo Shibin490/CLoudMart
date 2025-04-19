@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_mart/providers/signup_provider.dart';
+import 'package:cloud_mart/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +32,7 @@ class SignUpScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: size.height * 0.08),
+                SizedBox(height: size.height * 0.03),
                 Text(
                   'Create\nAccount',
                   style: TextStyle(
@@ -39,12 +42,11 @@ class SignUpScreen extends StatelessWidget {
                     height: 1.2,
                   ),
                 ),
-                SizedBox(height: 8),
                 Text(
-                  'Please fill the details to continue',
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                  'Fill the details to continue',
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: 25),
                 Container(
                   padding: EdgeInsets.all(24),
                   decoration: BoxDecoration(
@@ -53,87 +55,104 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      _buildTextField(
+                      CustomTextField(
                         controller: provider.nameController,
-                        icon: Icons.person_outline,
+                        prefixIcon: Icon(
+                          Icons.person_outline,
+                          color: Colors.white70,
+                        ),
                         label: 'Full Name',
                       ),
-                      SizedBox(height: 20),
-                      _buildTextField(
+                      SizedBox(height: 10),
+                      CustomTextField(
                         controller: provider.emailController,
-                        icon: Icons.email_outlined,
+                        prefixIcon: Icon(
+                          Icons.email_outlined,
+                          color: Colors.white70,
+                        ),
                         label: 'Email',
                       ),
-                      SizedBox(height: 20),
-                      TextFormField(
+                      SizedBox(height: 10),
+                      CustomTextField(
                         controller: provider.passwordController,
-                        style: TextStyle(color: Colors.white),
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
+                          color: Colors.white70,
+                        ),
+                        label: 'Password',
                         obscureText: !provider.isPasswordVisible,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.lock_outline,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            provider.isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                             color: Colors.white70,
                           ),
-                          labelText: 'Password',
-                          labelStyle: TextStyle(color: Colors.white70),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              provider.isPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors.white70,
-                            ),
-                            onPressed: provider.togglePasswordVisibility,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.white24),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
+                          onPressed: provider.togglePasswordVisibility,
                         ),
                       ),
-                      SizedBox(height: 20),
-                      _buildTextField(
+                      SizedBox(height: 10),
+                      CustomTextField(
                         controller: provider.phoneController,
-                        icon: Icons.phone_outlined,
+                        prefixIcon: Icon(
+                          Icons.phone_outlined,
+                          color: Colors.white70,
+                        ),
                         label: 'Phone Number',
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 10),
                     ],
                   ),
                 ),
-                SizedBox(height: 32),
+                SizedBox(height: 20),
                 provider.isLoading
                     ? Center(
                       child: CircularProgressIndicator(color: Colors.white),
                     )
                     : Column(
                       children: [
-                        SizedBox(
-                          width: double.infinity,
-                          height: 56,
-                          child: ElevatedButton(
-                            onPressed: () => provider.signUp(context),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 0,
-                            ),
-                            child: Text(
-                              'Create Account',
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 26, 5, 146),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                        CustomButton(
+                          text: 'Create Account',
+                          onPressed: () => provider.signUp(context),
+                          color: Colors.white,
+                          textStyle: TextStyle(
+                            color: Color.fromARGB(255, 26, 5, 146),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          width: 280, 
+                          height: 50, 
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'OR',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
+
+                        SizedBox(height: 9),
+
+                        CustomButton(
+                          onPressed: () => provider.signInWithGoogle(context),
+                          color: Colors.white,
+                          // icon: Image.asset(
+                          //   'assets/icons/google.png',
+                          //   height: 24,
+                          //   width: 24,
+                          // ),
+                          text: 'Continue with Google',
+                          textStyle: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                          width: 280, // Custom width
+                          height: 50, // Custom height
+                        ),
+
                         SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -146,8 +165,9 @@ class SignUpScreen extends StatelessWidget {
                               onTap:
                                   () => Navigator.pushReplacementNamed(
                                     context,
-                                    '/login',
+                                    '/signin',
                                   ),
+
                               child: Text(
                                 "Sign In",
                                 style: TextStyle(
@@ -163,30 +183,6 @@ class SignUpScreen extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required IconData icon,
-    required String label,
-  }) {
-    return TextFormField(
-      controller: controller,
-      style: TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.white70),
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.white70),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white24),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white),
         ),
       ),
     );

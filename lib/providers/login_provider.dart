@@ -34,7 +34,6 @@ class LoginProvider extends ChangeNotifier {
 
     try {
       await _authService.signIn(email, password);
-      // Navigate to home or dashboard
       Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

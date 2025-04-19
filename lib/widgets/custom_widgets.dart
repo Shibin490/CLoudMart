@@ -1,3 +1,4 @@
+// ignore_for_file: unnecessary_import
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,34 +9,39 @@ class CustomTextField extends StatelessWidget {
   final bool obscureText;
   final VoidCallback? onSuffixIconPressed;
   final Widget? suffixIcon;
+  final Color borderColor;
 
-  CustomTextField({
+  const CustomTextField({
+    super.key,
     required this.controller,
     required this.label,
     required this.prefixIcon,
     this.obscureText = false,
     this.onSuffixIconPressed,
     this.suffixIcon,
+    this.borderColor = Colors.white24,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       obscureText: obscureText,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.transparent, 
         prefixIcon: prefixIcon,
         labelText: label,
-        labelStyle: TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(color: Colors.white70),
         suffixIcon: suffixIcon,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white24),
+          borderSide: BorderSide(color: borderColor),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: borderColor),
         ),
       ),
     );
@@ -47,19 +53,26 @@ class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Color color;
   final TextStyle textStyle;
+  final Widget? icon;
+  final double? width; // ⬅️ Optional width
+  final double? height; // ⬅️ Optional height
 
-  CustomButton({
+  const CustomButton({
+    Key? key,
     required this.text,
     required this.onPressed,
     this.color = Colors.white,
     required this.textStyle,
-  });
+    this.icon,
+    this.width, // ⬅️ Added here
+    this.height, // ⬅️ Added here
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
-      height: 56,
+      width: width ?? double.infinity,
+      height: height ?? 56,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -69,9 +82,12 @@ class CustomButton extends StatelessWidget {
           ),
           elevation: 0,
         ),
-        child: Text(
-          text,
-          style: textStyle,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[icon!, const SizedBox(width: 10)],
+            Text(text, style: textStyle),
+          ],
         ),
       ),
     );

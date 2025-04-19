@@ -1,10 +1,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+    <!-- 🔽 Permissions for image picker -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- 🔽 Optional: declare intent for Android 13+ file picking -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+
     <application
         android:label="cloud_mart"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -14,12 +31,11 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
-            
+
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
-                android:resource="@style/NormalTheme"
-            />
-            
+                android:resource="@style/NormalTheme" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -30,11 +46,4 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
-
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT"/>
-            <data android:mimeType="text/plain"/>
-        </intent>
-    </queries>
 </manifest>

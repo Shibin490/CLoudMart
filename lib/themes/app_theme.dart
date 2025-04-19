@@ -1,63 +1,102 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color primaryColor = Color.fromARGB(255, 26, 5, 146);
-  static const Color secondaryColor = Color.fromARGB(255, 2, 7, 13);
-  static const Color white70 = Colors.white70;
+  static const Color primaryColor = Color(0xFF1A0592); 
+  static const Color secondaryColor = Color(0xFF02070D); 
+  static const Color accentColor = Color(0xFFF57C00); 
+  static const Color backgroundColor = Colors.white;
+  static const Color textPrimary = Color(0xFF212121);
+  static const Color textSecondary = Color(0xFF757575);
 
   static final TextStyle headerTextStyle = TextStyle(
-    color: Colors.white,
-    fontSize: 40,
+    color: textPrimary,
+    fontSize: 32,
     fontWeight: FontWeight.bold,
-    height: 1.2,
   );
 
   static final TextStyle subHeaderTextStyle = TextStyle(
-    color: Colors.white70,
+    color: textSecondary,
     fontSize: 16,
   );
 
   static final TextStyle buttonTextStyle = TextStyle(
-    color: primaryColor,
+    color: Colors.white,
     fontSize: 16,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w600,
   );
 
   static final TextStyle labelTextStyle = TextStyle(
-    color: Colors.white70,
+    color: textSecondary,
+    fontSize: 14,
   );
 
-  // 👇 Add a ThemeData configuration for your app
   static final ThemeData lightTheme = ThemeData(
     primaryColor: primaryColor,
-    scaffoldBackgroundColor: Colors.transparent,
+    scaffoldBackgroundColor: backgroundColor,
     fontFamily: 'Roboto',
+
+    colorScheme: ColorScheme.light(
+      primary: primaryColor,
+      secondary: accentColor,
+      background: backgroundColor,
+    ),
+
     textTheme: TextTheme(
       headlineLarge: headerTextStyle,
       titleMedium: subHeaderTextStyle,
       labelLarge: buttonTextStyle,
       labelSmall: labelTextStyle,
     ),
+
+    appBarTheme: AppBarTheme(
+      backgroundColor: primaryColor,
+      foregroundColor: Colors.white,
+      elevation: 4,
+      titleTextStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      iconTheme: IconThemeData(color: Colors.white),
+    ),
+
+    cardTheme: CardTheme(
+      color: Colors.white,
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shadowColor: Colors.black12,
+    ),
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
         textStyle: buttonTextStyle,
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 3,
       ),
     ),
+
     inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.grey[100],
+      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       labelStyle: labelTextStyle,
-      enabledBorder: OutlineInputBorder(
+      border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white24),
+        borderSide: BorderSide(color: Colors.grey.shade300),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white),
+        borderSide: BorderSide(color: primaryColor, width: 2),
       ),
     ),
-    iconTheme: IconThemeData(color: white70),
+
+    iconTheme: IconThemeData(color: primaryColor),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: accentColor,
+      foregroundColor: Colors.white,
+    ),
   );
 }

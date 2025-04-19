@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
@@ -6,74 +8,68 @@ class AuthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Current user
   User? get currentUser => _auth.currentUser;
-
-  // Stream of auth changes (user login state)
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  // Sign up with email and password
   Future<User?> signUp(String email, String password) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
-      print("✅ User signed up: ${userCredential.user?.uid}");
+      print(" User signed up: ${userCredential.user?.uid}");
       notifyListeners();
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      print("❌ Sign up failed: ${e.code} - ${e.message}");
+      print(" Sign up failed: ${e.code} - ${e.message}");
       throw _handleAuthException(e);
     }
   }
 
-  // Sign in with email and password
   Future<User?> signIn(String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      print("✅ User signed in: ${userCredential.user?.uid}");
-      notifyListeners();
+      print(" User signed in: ${userCredential.user?.uid}");
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      print("❌ Sign in failed: ${e.code} - ${e.message}");
-      throw _handleAuthException(e);
+      print(" Sign-in failed: ${e.code} - ${e.message}");
+
+      String errorMessage = _handleAuthException(e);
+      print("Error: $errorMessage");
+
+      throw errorMessage;
     }
   }
 
-  // Sign in with Google
   Future<User?> signInWithGoogle() async {
     try {
-      // Trigger the Google Sign-In flow
       GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        print("❌ Google sign-in aborted.");
-        return null; // User canceled the sign-in
+        print(" Google sign-in aborted.");
+        return null; 
       }
 
-      // Obtain the GoogleAuth details
       GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-      // Create a new credential using the GoogleAuth details
       OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // Sign in with the Google credentials
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
-      print("✅ User signed in with Google: ${userCredential.user?.uid}");
+      UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
+      print(" User signed in with Google: ${userCredential.user?.uid}");
       notifyListeners();
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
-      print("❌ Google sign-in failed: ${e.code} - ${e.message}");
+      print(" Google sign-in failed: ${e.code} - ${e.message}");
       throw _handleAuthException(e);
     }
   }
 
-  // Handle FirebaseAuthException and return a readable message
   String _handleAuthException(FirebaseAuthException e) {
     switch (e.code) {
       case 'email-already-in-use':
@@ -86,16 +82,21 @@ class AuthService extends ChangeNotifier {
         return 'No user found for that email.';
       case 'wrong-password':
         return 'Incorrect password. Please try again.';
+      case 'user-disabled':
+        return 'Your account has been disabled. Please contact support.';
+      case 'too-many-requests':
+        return 'Too many requests. Please try again later.';
+      case 'operation-not-allowed':
+        return 'This operation is not allowed. Please contact support.';
       default:
         return 'An unknown error occurred. Please try again.';
     }
   }
 
-  // Sign out the user
   Future<void> signOut() async {
     await _auth.signOut();
     await _googleSignIn.signOut();
-    print("🚪 User signed out");
+    print(" User signed out");
     notifyListeners();
   }
 }
