@@ -1,52 +1,43 @@
-import 'package:cloud_mart/models/product_mode.dart';
-import 'package:cloud_mart/services/firestore_services.dart';
+
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class HomeProvider with ChangeNotifier {
-  final ProductService _productService = ProductService();
-  bool _isGridView = true;
-  final TextEditingController _searchController = TextEditingController();
-  List<Product> _filteredProducts = [];
-  
-  bool get isGridView => _isGridView;
-  TextEditingController get searchController => _searchController;
-  List<Product> get filteredProducts => _filteredProducts;
-  Stream<List<Product>> get productsStream => _productService.getProducts();
-  
-  HomeProvider() {
-    _searchController.addListener(_onSearchChanged);
-  }
-  
-  void toggleViewMode() {
-    _isGridView = !_isGridView;
+  File? _imageFile;
+  String _name = '';
+  double _price = 0.0;
+  String _description = '';
+
+  File? get imageFile => _imageFile;
+  String get name => _name;
+  double get price => _price;
+  String get description => _description;
+
+  void setImageFile(File? imageFile) {
+    _imageFile = imageFile;
     notifyListeners();
   }
-  
-  void _onSearchChanged() {
-    if (_searchController.text.isEmpty) {
-      _filteredProducts = [];
-      notifyListeners();
-    }
+
+  void setName(String name) {
+    _name = name;
+    notifyListeners();
   }
-  
-  void searchProducts(String query) {
-    if (query.isEmpty) {
-      _filteredProducts = [];
-    } else {
-      _productService.getProducts().first.then((products) {
-        _filteredProducts = products.where((product) => 
-          product.name.toLowerCase().contains(query.toLowerCase()) ||
-          (product.description).toLowerCase().contains(query.toLowerCase())
-        ).toList();
-        notifyListeners();
-      });
-    }
+
+  void setPrice(String price) {
+    _price = double.tryParse(price) ?? 0.0;
+    notifyListeners();
   }
-  
-  @override
-  void dispose() {
-    _searchController.removeListener(_onSearchChanged);
-    _searchController.dispose();
-    super.dispose();
+
+  void setDescription(String description) {
+    _description = description;
+    notifyListeners();
+  }
+
+  void clearForm() {
+    _imageFile = null;
+    _name = '';
+    _price = 0.0;
+    _description = '';
+    notifyListeners();
   }
 }
