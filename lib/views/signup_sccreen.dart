@@ -149,8 +149,8 @@ class SignUpScreen extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
                           ),
-                          width: 280, // Custom width
-                          height: 50, // Custom height
+                          width: 280,
+                          height: 50, 
                         ),
 
                         SizedBox(height: 20),

@@ -1,10 +1,8 @@
-import 'package:cloud_mart/providers/add_product_provider.dart';
 import 'package:cloud_mart/providers/home_provider.dart';
 import 'package:cloud_mart/providers/login_provider.dart';
-import 'package:cloud_mart/providers/product_detail_provider.dart';
 import 'package:cloud_mart/providers/signup_provider.dart';
+import 'package:cloud_mart/providers/add_product_provider.dart';
 import 'package:cloud_mart/routes/routes.dart';
-import 'package:cloud_mart/views/auth_wraper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -28,18 +26,17 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => AuthService()),
             ChangeNotifierProvider(create: (_) => SignUpProvider()),
             ChangeNotifierProvider(create: (_) => LoginProvider()),
-        ChangeNotifierProvider(create: (_) => HomeProvider()),
-        ChangeNotifierProvider(create: (context) => AddProductProvider()),
-         ChangeNotifierProvider(
-      create: (context) => ProductProvider(),),
-      ],
+            ChangeNotifierProvider(create: (_) => AddProductProvider()),
+            ChangeNotifierProvider(create: (_) => HomeProvider()),
+            
+          ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Cloud Mart',
             theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.lightTheme, 
-            themeMode: ThemeMode.dark, 
-            home: AuthWrapper(),
+            darkTheme: AppTheme.lightTheme,
+            themeMode: ThemeMode.dark,
+            initialRoute: '/',
             routes: AppRoutes.routes,
           ),
         );

@@ -54,8 +54,8 @@ class CustomButton extends StatelessWidget {
   final Color color;
   final TextStyle textStyle;
   final Widget? icon;
-  final double? width; // ⬅️ Optional width
-  final double? height; // ⬅️ Optional height
+  final double? width; 
+  final double? height; 
 
   const CustomButton({
     Key? key,
@@ -64,8 +64,8 @@ class CustomButton extends StatelessWidget {
     this.color = Colors.white,
     required this.textStyle,
     this.icon,
-    this.width, // ⬅️ Added here
-    this.height, // ⬅️ Added here
+    this.width, 
+    this.height, 
   }) : super(key: key);
 
   @override
